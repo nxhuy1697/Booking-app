@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookingapp.bookingapp.mapper.AdminMapper">
+
+        <select id="findByEmailAndPassword"
+                resultType="com.bookingapp.bookingapp.model.Admin">
+            <![CDATA[
+                SELECT admin_id, username, password
+                        FROM "admin"
+                        WHERE username = #{username}
+            ]]>
+
+        </select>
+    <insert id="createAdmin"
+            parameterType="com.bookingapp.bookingapp.model.Admin">
+        <![CDATA[
+        insert
+        into admin (
+            "admin_id",
+            "username",
+            "password",
+            "role_code",
+            "code"
+
+        )
+        values (
+                   #{adminId},
+                   #{username},
+                   #{password},
+                   #{roleCode},
+                #{code}
+               )
+        ]]>
+    </insert>
+    <select id="countAdmin"
+            parameterType="com.bookingapp.bookingapp.model.Admin"
+            resultType="Integer">
+        <![CDATA[
+			SELECT COUNT(*) FROM admin
+		]]>
+        <where>
+            <if test="code != null and code !=''">
+                AND  code ILIKE CONCAT('%' || #{code} ||'%')
+            </if>
+        </where>
+    </select>
+    <update id="updateAdmin"
+            parameterType="com.bookingapp.bookingapp.model.Admin">
+
+        UPDATE "admin"
+        SET username = #{username},
+            password = #{password},
+            role_Code = #{roleCode},
+            code = #{code}
+
+        WHERE admin_id = #{adminId}
+
+	</update>
+
+    <delete id="deleteAdmin"
+            parameterType="BigInteger"
+    >
+		<![CDATA[
+        DELETE FROM admin WHERE "admin_id" = #{adminId}
+        ]]>
+	</delete>
+
+
+
+</mapper>

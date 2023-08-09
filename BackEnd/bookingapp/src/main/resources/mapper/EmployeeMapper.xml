@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookingapp.bookingapp.mapper.EmployeeMapper">
+
+    <select id="findByEmailAndPassword"
+            resultType="com.bookingapp.bookingapp.model.Employee">
+            <![CDATA[
+        SELECT employee_id, email, password
+        FROM employee
+        WHERE email = #{email}
+        ]]>
+    </select>
+
+    <insert id="createEmployee"
+            parameterType="com.bookingapp.bookingapp.model.Employee">
+    <![CDATA[
+        INSERT INTO employee (
+            "employee_id",
+            "employee_name",
+            "email",
+            "supported_product",
+            "password",
+            "code",
+            "phone"
+
+        ) VALUES (
+                     #{employeeId},
+                     #{employeeName},
+                     #{email},
+                     #{supportedProduct},
+                     #{password},
+                  #{code},
+                  #{phone}
+                 )
+        ]]>
+
+    </insert>
+
+    <select id="countEmployee"
+            parameterType="com.bookingapp.bookingapp.model.Employee"
+            resultType="Integer">
+        <![CDATA[
+			SELECT COUNT(*) FROM employee
+		]]>
+        <where>
+            <if test="code != null and code !=''">
+                AND  code ILIKE CONCAT('%' || #{code} ||'%')
+            </if>
+        </where>
+    </select>
+
+    <update id="updateEmployee"
+            parameterType="com.bookingapp.bookingapp.model.Employee">
+            <![CDATA[
+        UPDATE employee
+        SET "employee_name" = #{employeeName},
+            "email" = #{email},
+            "supported_product" = #{supportedProduct},
+            "password" = #{password},
+            "code" = #{code},
+            "phone" = #{phone}
+
+        WHERE employee_id = #{employeeId}
+        ]]>
+	</update>
+
+    <delete id="deleteEmployee"
+            parameterType="BigInteger"
+    >
+		<![CDATA[
+        DELETE FROM employee WHERE "employee_id" = #{employeeId}
+        ]]>
+	</delete>
+</mapper>

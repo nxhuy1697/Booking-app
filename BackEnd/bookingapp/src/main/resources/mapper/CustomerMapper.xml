@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bookingapp.bookingapp.mapper.CustomerMapper">
+
+    <select id="getCustomer"
+            parameterType="com.bookingapp.bookingapp.model.Customer"
+            resultType="com.bookingapp.bookingapp.model.Customer">
+
+        <![CDATA[
+		SELECT *
+		FROM customer
+	]]>
+        <where>
+            <if test="customer_name != null and customer_name !=''">
+                AND  customer_name ILIKE CONCAT('%' || #{customerName} ||'%')
+            </if>
+        </where>
+        <where>
+            <if test="email != null and email !=''">
+                AND  email ILIKE CONCAT('%' || #{email} ||'%')
+            </if>
+        </where>
+        <where>
+            <if test="product != null and product !=''">
+                AND  product ILIKE CONCAT('%' || #{product} ||'%')
+            </if>
+        </where>
+    </select>
+
+    <select id="createCustomer"
+            parameterType="com.bookingapp.bookingapp.model.Customer"
+            resultType="com.bookingapp.bookingapp.model.Customer"
+    >
+        <![CDATA[
+        insert
+        into customer (
+
+            "customer_name",
+            "email",
+            "phone",
+            "product"
+
+        )
+        values (
+
+                   #{customerName},
+                   #{email},
+                   #{phone},
+                   #{product}
+               )
+        ]]> RETURNING *;
+    </select>
+    <select id="countCustomer" resultType="Integer">
+        SELECT  COUNT(*) FROM customer
+
+    </select>
+    <select id="filter" resultType="com.bookingapp.bookingapp.model.Customer">
+        SELECT  *
+        FROM customer
+
+        <where>
+            <if test="customerName != null and customerName != ''">
+                AND  customer_name ILIKE CONCAT('%' || #{customerName} ||'%')
+            </if>
+
+
+        </where>
+--         ORDER BY created_date DESC
+<!--        <if test="limit > 0">-->
+<!--            OFFSET (#{page}-1) * #{limit} FETCH NEXT #{limit} ROWS ONLY-->
+<!--        </if>-->
+    </select>
+<!--    <select id="countCustomer" resultType="Integer">-->
+<!--			SELECT COUNT(*) FROM customer-->
+<!--        <where>-->
+<!--            <if test="email != null and email !=''">-->
+<!--                AND  email ILIKE CONCAT('%' || #{email} ||'%')-->
+<!--            </if>-->
+<!--        </where>-->
+
+<!--        <where>-->
+<!--            <if test="product != null and product !=''">-->
+<!--                AND  product ILIKE CONCAT('%' || #{product} ||'%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--        <where>-->
+<!--            <if test="customer_name != null and customer_name !=''">-->
+<!--                AND  customer_name ILIKE CONCAT('%' || #{customerName} ||'%')-->
+<!--            </if>-->
+<!--        </where>-->
+<!--    </select>-->
+    <update id="updateCustomer"
+            parameterType="com.bookingapp.bookingapp.model.Customer">
+            <![CDATA[
+        UPDATE customer
+        SET "customer_name" = #{customerName},
+            "email" = #{email},
+            "phone" = #{phone},
+            "product" = #{product}
+        WHERE customer_id = #{customerId}
+        ]]>
+	</update>
+
+    <delete id="deleteCustomer"
+            parameterType="BigInteger"
+    >
+		<![CDATA[
+        DELETE FROM customer WHERE "customer_id" = #{customerId}
+        ]]>
+	</delete>
+</mapper>
